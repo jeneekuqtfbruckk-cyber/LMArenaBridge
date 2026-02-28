@@ -40,4 +40,4 @@ fi
 echo "🌐 Starting LMArenaBridge on port 7860..."
 
 # 启动主程序
-exec python3 src/main.py
+exec python3 -m src.main
