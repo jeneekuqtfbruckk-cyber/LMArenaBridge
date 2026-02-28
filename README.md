@@ -1,3 +1,12 @@
+---
+title: LMArenaBridge
+emoji: 🦀
+colorFrom: indigo
+colorTo: blue
+sdk: docker
+app_port: 7860
+---
+
 # LM Arena Bridge
 
 <a href="https://www.drips.network/app/projects/github/CloudWaddie/LMArenaBridge" target="_blank"><img src="https://www.drips.network/api/embed/project/https%3A%2F%2Fgithub.com%2FCloudWaddie%2FLMArenaBridge/support.png?background=light&style=drips&text=project&stat=support" alt="Support LMArenaBridge on drips.network" height="32"></a>
