@@ -1,29 +1,38 @@
 FROM python:3.12-slim
 
-# 创建非 root 用户 (HF Spaces 要求 UID 1000)
-RUN useradd -m -u 1000 user
+WORKDIR /app
 
-WORKDIR /home/user/app
+# Install necessary system utilities
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    build-essential \
+    curl \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
 
-# 复制依赖文件并安装
+# Copy requirements first to leverage Docker cache
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 预创建可写目录
-RUN mkdir -p /home/user/app /home/user/.cache && \
-    chown -R user:user /home/user
+# Install OS dependencies for browsers using Playwright's helper
+RUN playwright install-deps
 
-# 切换到非 root 用户
+# Create non-root user for Hugging Face Spaces (UID 1000)
+RUN useradd -m -u 1000 user
+
+# Copy the rest of the application code, assigning ownership to 'user'
+COPY --chown=user:user . .
+
+# Ensure startup script is executable
+RUN chmod +x startup.sh
+
+# Switch to the non-root user
 USER user
-ENV PATH="/home/user/.local/bin:${PATH}"
 ENV HOME=/home/user
+ENV PATH="/home/user/.local/bin:${PATH}"
 
-# 复制全部项目代码
-COPY --chown=user:user . /home/user/app
+# Pre-fetch Camoufox browser binaries to avoid downloading on every container start
+RUN python3 -m camoufox fetch
 
-# 设置启动脚本可执行
-RUN chmod +x /home/user/app/startup.sh
-
-EXPOSE 7860
-
-CMD ["/bin/bash", "/home/user/app/startup.sh"]
+# Command to run on container start
+CMD ["./startup.sh"]
