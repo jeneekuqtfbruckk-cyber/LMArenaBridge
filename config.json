@@ -1,0 +1,9 @@
+{
+    "password": "admin",
+    "auth_token": "",
+    "auth_tokens": [],
+    "cf_clearance": "",
+    "api_keys": [],
+    "prune_invalid_tokens": false,
+    "persist_arena_auth_cookie": false
+}
